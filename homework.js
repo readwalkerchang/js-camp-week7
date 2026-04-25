@@ -7,6 +7,7 @@
 require('dotenv').config({ path: '.env' });
 const dayjs = require('dayjs');
 const axios = require('axios');
+const DateCalculator = require('./helper.js')
 
 // API 設定（從 .env 讀取）
 const API_PATH = process.env.API_PATH;
@@ -25,6 +26,7 @@ const ADMIN_TOKEN = process.env.API_KEY;
 function formatOrderDate(timestamp) {
   // 請實作此函式
   // 提示：dayjs.unix(timestamp).format('YYYY/MM/DD HH:mm')
+  return dayjs.unix(timestamp).format('YYYY/MM/DD HH:mm');
 }
 
 /**
@@ -38,6 +40,13 @@ function getDaysAgo(timestamp) {
   // 1. 用 dayjs() 取得今天
   // 2. 用 dayjs.unix(timestamp) 取得訂單日期
   // 3. 用 .diff() 計算天數差異
+  const dayDiff = DateCalculator.getDayDiffFromNow(timestamp);
+  if (dayDiff !== 0){
+    return `${dayDiff}天前`;
+  } 
+  else{
+    return '今天';
+  }
 }
 
 /**
@@ -46,7 +55,10 @@ function getDaysAgo(timestamp) {
  * @returns {boolean} - 超過 7 天回傳 true
  */
 function isOrderOverdue(timestamp) {
-  // 請實作此函式
+  if(DateCalculator.getDayDiffFromNow(timestamp)>7){
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -60,6 +72,14 @@ function getThisWeekOrders(orders) {
   // 1. 用 dayjs().startOf('week') 取得本週開始
   // 2. 用 dayjs().endOf('week') 取得本週結束
   // 3. 用 .isBefore() 和 .isAfter() 判斷
+  const weekStart = dayjs().startOf('week');
+  const weekEnd = dayjs().endOf('week');
+
+  return orders.filter((orderItem) => {
+    const orderCreateDate = dayjs.unix(orderItem.createdAt);
+    return orderCreateDate.isBefore(weekEnd) === true 
+    && orderCreateDate.isAfter(weekStart)=== true 
+  });
 }
 
 // ========================================
@@ -107,6 +127,7 @@ function validateCartQuantity(quantity) {
 function generateOrderId() {
   // 請實作此函式
   // 提示：可以用 Date.now().toString(36) + Math.random().toString(36).slice(2)
+  
 }
 
 /**
