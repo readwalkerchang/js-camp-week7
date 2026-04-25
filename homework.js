@@ -100,6 +100,24 @@ function getThisWeekOrders(orders) {
  */
 function validateOrderUser(data) {
   // 請實作此函式
+  const error = [];
+  if( !data.name || data.name.trim() === ''){
+    error.push('姓名不可為空');
+  };
+  if(!(/^09\d{8}$/.test(data.tel))){
+    error.push('請輸入正確的電話格式');
+  };
+  if(!data.email || !data.email.includes('@')){
+    error.push('Email 格式不正確');
+  }
+  if( !data.address || data.address.trim() === ''){
+    error.push('地址不可為空');
+  };
+  if(!data.payment === 'ATM' && !data.payment === 'Credit Card'&& !data.payment === 'Apple Pay'){
+    error.push('付款方式不可用，請選用ATM、信用卡或Apple Pay');
+  }
+  if(error.length === 0)
+
 }
 
 /**
@@ -127,6 +145,7 @@ function validateCartQuantity(quantity) {
 function generateOrderId() {
   // 請實作此函式
   // 提示：可以用 Date.now().toString(36) + Math.random().toString(36).slice(2)
+  return 'ORD'+ Date.now().toString(36) + Math.random().toString(36).slice(2);
   
 }
 
