@@ -7,7 +7,8 @@
 require('dotenv').config({ path: '.env' });
 const dayjs = require('dayjs');
 const axios = require('axios');
-const DateCalculator = require('./helper.js')
+const { DateCalculator, ValidationHelper } = require('./helper.js');
+
 
 // API 設定（從 .env 讀取）
 const API_PATH = process.env.API_PATH;
@@ -101,23 +102,23 @@ function getThisWeekOrders(orders) {
 function validateOrderUser(data) {
   // 請實作此函式
   const error = [];
-  if( !data.name || data.name.trim() === ''){
+  if (!data.name || data.name.trim() === '') {
     error.push('姓名不可為空');
-  };
-  if(!(/^09\d{8}$/.test(data.tel))){
+  }
+  if (!(/^09\d{8}$/.test(data.tel))) {
     error.push('請輸入正確的電話格式');
-  };
-  if(!data.email || !data.email.includes('@')){
+  }
+  if (!data.email || !data.email.includes('@')) {
     error.push('Email 格式不正確');
   }
-  if( !data.address || data.address.trim() === ''){
+  if (!data.address || data.address.trim() === '') {
     error.push('地址不可為空');
-  };
-  if(!data.payment === 'ATM' && !data.payment === 'Credit Card'&& !data.payment === 'Apple Pay'){
+  }
+  if (data.payment !== 'ATM' && data.payment !== 'Credit Card' && data.payment !== 'Apple Pay') {
     error.push('付款方式不可用，請選用ATM、信用卡或Apple Pay');
   }
-  if(error.length === 0)
 
+  return ValidationHelper.buildValidationResult(error);
 }
 
 /**
@@ -132,7 +133,21 @@ function validateOrderUser(data) {
  */
 function validateCartQuantity(quantity) {
   // 請實作此函式
+  error = [];
+  if(!Number.isInteger(quantity)){
+    error.push('數量必須是正整數');
+  }
+  if (quantity < 1) {
+    error.push('數量不可小於 1');
+  }
+  if (quantity > 99) {
+    error.push('數量不可大於 99');
+  }
+
+  return ValidationHelper.buildValidationResult(error);
+
 }
+
 
 // ========================================
 // 任務三：唯一識別碼（原生 JS 實作）

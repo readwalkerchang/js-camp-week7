@@ -11,4 +11,17 @@ const DateCalculator = {
   }
 };
 
-module.exports = DateCalculator;
+const ValidationHelper = {
+  buildValidationResult(error){
+    if (error.length === 0) {
+      return { isValid: true, errors: error };
+    } else {
+      return { isValid: false, errors: error };
+    }
+  }
+}
+
+module.exports = {
+  DateCalculator,
+  ValidationHelper
+};
