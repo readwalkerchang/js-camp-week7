@@ -249,6 +249,10 @@ const OrderService = {
    */
   async fetchOrders() {
     // 請實作此函式
+      const response = await axios.get(OrderService.baseURL+'/api/livejs/v1/admin/'+OrderService.apiPath+'/orders',
+    { headers: { authorization: OrderService.token }}
+    );
+    return response.data.orders;
   },
 
   /**
