@@ -224,11 +224,11 @@ async function getOrdersWithAxios() {
 /*
 比較題：請說明 fetch 和 axios 的主要差異
 
-1. ____________________________________
+1. fetch會需要自行做try catch錯誤處理，axios則內建這個功能
 
-2. ____________________________________
+2. fetch需要自行指定methods，axios可以直接調用methods
 
-3. ____________________________________
+3. fetch需要自行轉換料格式為json，axios內建自動轉換功能
 */
 
 // ========================================
@@ -262,6 +262,8 @@ const OrderService = {
    */
   formatOrders(orders) {
     // 請實作此函式
+    orders.forEach(order => order.formattedDate = formatOrderDate(order.createdAt))
+    return orders;
   },
 
   /**
@@ -271,6 +273,7 @@ const OrderService = {
    */
   filterUnpaidOrders(orders) {
     // 請實作此函式
+    return orders.filter(order => order.paid === false);
   },
 
   /**
